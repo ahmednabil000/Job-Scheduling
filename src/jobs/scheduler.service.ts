@@ -21,14 +21,14 @@ export class SchedulerService implements OnModuleInit {
 
     await this.recoverStuckJobs();
 
-    void this.handleCron();
+    void this.handleSchedualing();
     setInterval(() => {
-      void this.handleCron();
+      void this.handleSchedualing();
     }, this.POLL_INTERVAL);
   }
 
-  private async handleCron() {
-    this.logger.log('Running Cron Jobs...');
+  private async handleSchedualing() {
+    this.logger.log('Running Schedualed Jobs...');
     try {
       await db.transaction(async (tx) => {
         const result = await tx.execute(sql`
@@ -60,10 +60,10 @@ export class SchedulerService implements OnModuleInit {
     try {
       if (this.processorsMap.has(job.name)) {
         const processor = this.processorsMap.get(job.name)!;
-        void processor.process();
+        await processor.process();
       } else {
         const processor = this.jobProcessorFactory.createProcess(job);
-        void processor.process();
+        await processor.process();
       }
 
       const interval = job.interval * 1000;

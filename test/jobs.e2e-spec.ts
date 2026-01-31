@@ -19,6 +19,7 @@ describe('JobsController (e2e)', () => {
   }, 30000);
 
   afterAll(async () => {
+    await db.delete(jobs);
     await app.close();
   });
 
@@ -29,7 +30,7 @@ describe('JobsController (e2e)', () => {
   it('/jobs (POST) - Create SMS Job and Verify Execution', async () => {
     const smsJobData = {
       name: 'sms',
-      interval: 0, 
+      interval: 0,
       data: {
         to: '+1234567890',
         message: 'Hello E2E',

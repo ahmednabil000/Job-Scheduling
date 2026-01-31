@@ -1,6 +1,9 @@
-import * as z from 'zod';
+import * as zod from 'zod';
+import { z } from 'zod';
 
-export const emailSenderJobValidator = z.object({
-  to: z.email(),
-  from: z.email(),
+export const emailSenderJobValidator = zod.object({
+  to: zod.email(),
+  from: zod.email(),
 });
+
+export type EmailSernderData = z.infer<typeof emailSenderJobValidator>;

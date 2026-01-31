@@ -67,3 +67,52 @@ npm run test:e2e
 # test coverage
 npm run test:cov
 ```
+
+## API Documentation
+
+For detailed information about the API endpoints, request shapes, and response examples, please refer to [API.md](API.md).
+
+## Adding New Job Types
+
+To add a new job type (e.g., `push-notification`), follow these steps:
+
+1.  **Create a Validator**:
+    Create a new validator file in `src/jobs/validators/` (e.g., `push-notification.validator.ts`) to define the expected data shape.
+
+    ```typescript
+    import { z } from 'zod';
+    export const pushNotificationValidator = z.object({
+      userId: z.string(),
+      title: z.string(),
+    });
+
+    export type PushNotificationData = z.infer<
+      typeof pushNotificationValidator
+    >;
+    ```
+
+2.  **Implement Job Processor**:
+    Create a new processor class in `src/jobs/processors/` that implements the `JobProcessor` interface.
+
+    ```typescript
+    import { JobProcessor } from '../interfaces/job-processor.interface';
+    import { PushNotificationData } from '../validators/push-notification.validator';
+
+    export class PushNotificationProcessor implements JobProcessor {
+      constructor(private readonly data: PushNotificationData) {}
+      async process(): Promise<void> {
+        // Implement your logic here
+        console.log('Sending push notification...', this.data);
+      }
+    }
+    ```
+
+3.  **Register in Factory**:
+    Update `src/jobs/factories/job-processor.factory.ts` to instantiate your new processor when the job name matches.
+    ```typescript
+    // ... imports
+    case 'push-notification':
+      const data = pushNotificationValidator.parse(job.data);
+      if (data) return new PushNotificationProcessor(data);
+      return new InvalidJobProcessor({ jobId: job.id });
+    ```
