@@ -50,7 +50,7 @@ npm run migrate
 You can now start the application:
 
 ```bash
-# 
+# start the application
 npm run start
 ```
 
