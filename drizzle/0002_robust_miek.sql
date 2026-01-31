@@ -1,0 +1,1 @@
+ALTER TABLE "jobs" ALTER COLUMN "interval" SET DATA TYPE real;

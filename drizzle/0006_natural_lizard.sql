@@ -1,0 +1,1 @@
+ALTER TABLE "jobs" ADD COLUMN "created_at" timestamp NOT NULL;

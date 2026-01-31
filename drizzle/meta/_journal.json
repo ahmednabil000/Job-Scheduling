@@ -1,0 +1,55 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1769869882504,
+      "tag": "0000_known_ezekiel_stane",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1769873060051,
+      "tag": "0001_tan_triathlon",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769873209976,
+      "tag": "0002_robust_miek",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1769873997567,
+      "tag": "0003_marvelous_champions",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1769875928543,
+      "tag": "0004_pretty_klaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1769881850405,
+      "tag": "0005_dear_omega_red",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1769883818167,
+      "tag": "0006_natural_lizard",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+﻿[20:28:02.220] [32mINFO[39m (11100): [36mrequest completed[39m [90m{"req":{"id":1,"method":"POST","url":"/jobs","query":{},"params":{"path":["jobs"]},"headers":{"host":"127.0.0.1:62766","accept-encoding":"gzip, deflate","content-type":"application/json","content-length":"77","connection":"close"},"remoteAddress":"::ffff:127.0.0.1","remotePort":62767},"res":{"statusCode":201,"headers":{"x-powered-by":"Express","x-ratelimit-limit":"1000","x-ratelimit-remaining":"999","x-ratelimit-reset":"60","content-type":"application/json; charset=utf-8","content-length":"48","etag":"W/\"30-bF3LTXh70NKLa+Gms0uJcMexruM\""}},"responseTime":25}[39m
+  console.log
+    Initial lastRunAt: 1769884082205
+
+      at Object.<anonymous> (jobs.e2e-spec.ts:61:13)
+
+  console.log
+    Waiting for job execution...
+
+      at Object.<anonymous> (jobs.e2e-spec.ts:64:13)
+
+  console.log
+    Polling: Status=PENDING, LastRunAt=1769884082205, Diff=0
+
+      at Object.<anonymous> (jobs.e2e-spec.ts:78:15)
+
+  console.log
+    Polling: Status=PENDING, LastRunAt=1769884082205, Diff=0
+
+      at Object.<anonymous> (jobs.e2e-spec.ts:78:15)
+
+  console.log
+    Polling: Status=PENDING, LastRunAt=1769884083832, Diff=1627
+
+      at Object.<anonymous> (jobs.e2e-spec.ts:78:15)
+
+  console.warn
+    Job executed but RUNNING state was missed in polling.
+
+    [0m [90m 102 |[39m
+     [90m 103 |[39m     [36mif[39m (jobExecuted [33m&&[39m [33m![39mcaughtRunning) {
+    [31m[1m>[22m[39m[90m 104 |[39m       console[33m.[39mwarn([32m'Job executed but RUNNING state was missed in polling.'[39m)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 105 |[39m       [90m// Consider passing if it executed, or enforcing RUNNING check?[39m
+     [90m 106 |[39m       [90m// Given 5s delay, we should catch it.[39m
+     [90m 107 |[39m     }[0m
+
+      at Object.<anonymous> (jobs.e2e-spec.ts:104:15)
+

@@ -1,0 +1,1 @@
+CREATE INDEX "polling_idx" ON "jobs" USING btree ("next_run_at","status");
