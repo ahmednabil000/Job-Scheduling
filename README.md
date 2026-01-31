@@ -17,7 +17,7 @@ npm install
 ## Database Setup
 
 1. Make sure you have PostgreSQL installed and running.
-2. Create a new database named `jobs-schedualing`.
+2. Create a new database named `jobs-scheduling`.
 
 ## Configuration
 
@@ -70,7 +70,11 @@ npm run test:cov
 
 ## API Documentation
 
-For detailed information about the API endpoints, request shapes, and response examples, please refer to [API.md](API.md).
+For detailed information about the API endpoints, request shapes, and response examples, please refer to the [API Documentation](./API.md).
+
+## Scalability Design
+
+To understand how this microservice handles high throughput (~6,000 req/min) and concurrency (~1,000 services), please read the [Scalability Design Document](./SCALABILITY.md).
 
 ## Adding New Job Types
 

@@ -21,13 +21,13 @@ export class SchedulerService implements OnModuleInit {
 
     await this.recoverStuckJobs();
 
-    void this.handleSchedualing();
+    void this.handleScheduling();
     setInterval(() => {
-      void this.handleSchedualing();
+      void this.handleScheduling();
     }, this.POLL_INTERVAL);
   }
 
-  private async handleSchedualing() {
+  private async handleScheduling() {
     this.logger.log('Running Schedualed Jobs...');
     try {
       await db.transaction(async (tx) => {

@@ -10,6 +10,7 @@ describe('JobsController (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
+    process.env.POLL_INTERVAL = '1000';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -29,7 +30,7 @@ describe('JobsController (e2e)', () => {
 
   it('/jobs (POST) - Create SMS Job and Verify Execution', async () => {
     const smsJobData = {
-      name: 'sms',
+      name: 'sms-sender',
       interval: 0,
       data: {
         to: '+1234567890',
@@ -52,7 +53,7 @@ describe('JobsController (e2e)', () => {
 
     expect(initialJob).toBeDefined();
     expect(initialJob?.status).toBe('PENDING');
-    expect(initialJob?.name).toBe('sms');
+    expect(initialJob?.name).toBe('sms-sender');
     expect(initialJob?.data).toEqual(smsJobData.data);
 
     const initialLastRunAt = initialJob!.lastRunAt.getTime();
@@ -82,7 +83,7 @@ describe('JobsController (e2e)', () => {
     await request(app.getHttpServer())
       .post('/jobs')
       .send({
-        name: 'sms',
+        name: 'sms-sender',
         interval: 10,
         data: { to: '+123', message: 'test' },
       })
@@ -102,7 +103,7 @@ describe('JobsController (e2e)', () => {
     const createResponse = await request(app.getHttpServer())
       .post('/jobs')
       .send({
-        name: 'sms',
+        name: 'sms-sender',
         interval: 10,
         data: { to: '+123', message: 'test' },
       })
@@ -115,6 +116,6 @@ describe('JobsController (e2e)', () => {
       .expect(200);
 
     expect(response.body).toHaveProperty('id', jobId);
-    expect(response.body).toHaveProperty('name', 'sms');
+    expect(response.body).toHaveProperty('name', 'sms-sender');
   });
 });

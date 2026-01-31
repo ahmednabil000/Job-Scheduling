@@ -12,14 +12,14 @@ export class JobProcessorFactory {
   constructor() {}
   public createProcess(job: Job): JobProcessor {
     switch (job.name.toLowerCase()) {
-      case 'email': {
+      case 'email-sender': {
         const data = emailSenderJobValidator.parse(job.data);
         if (data) {
           return new EmailSenderJobProcessor(data);
         }
         return new InvalidJobProcessor({ jobId: job.id });
       }
-      case 'sms': {
+      case 'sms-sender': {
         const data = smsSenderJobValidator.parse(job.data);
         if (data) {
           return new SmsSenderJobProcessor(data);

@@ -7,9 +7,9 @@ import { smsSenderJobValidator } from '../validators/sms-sender.validator';
 export class JobValidatorFactory {
   public getValidator(type: string): ZodSchema | null {
     switch (type.toLowerCase()) {
-      case 'email':
+      case 'email-sender':
         return emailSenderJobValidator;
-      case 'sms':
+      case 'sms-sender':
         return smsSenderJobValidator;
       default:
         return null; // Or throw error, but service handles "unknown" usually
