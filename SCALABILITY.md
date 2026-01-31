@@ -1,0 +1,35 @@
+# System Scalability
+
+To handle the load constraints (~10k users, ~1k job types, 6k RPM), I designed the scheduler with two key optimizations:
+
+## 1. Concurrent Job Polling with `SKIP LOCKED`
+
+Worker instances (not "services") fetch pending jobs using:
+
+```sql
+SELECT * FROM jobs
+WHERE status = 'pending'
+  AND next_run_at <= NOW()
+ORDER BY next_run_at
+LIMIT 10
+FOR UPDATE SKIP LOCKED;
+```
+
+## 2. Optimized Indexing for O(1) Polling
+
+```typescript
+pollingIndex: d.index('jobs_status_next_run_idx').on(t.status, t.nextRunAt);
+```
+
+Without this, polling would scan all jobs (O(n)), failing at 6k RPM.
+With the index, PostgreSQL jumps directly to relevant rows (effectively O(1)).
+
+## 3. Modular Architecture
+
+The system uses the **Factory Pattern** to create job processors and the **Strategy Pattern** to execute them. This ensures the scheduler remains open for extension but closed for modification (OCP).
+
+### Result
+
+- **6,000 RPM = 100 RPS** → easily handled by 2–5 worker instances.
+- **Global users**: Stateless workers + connection pooling (PgBouncer) handle regional traffic.
+- **No bottlenecks**: No central coordinator, no table locks, no race conditions.
