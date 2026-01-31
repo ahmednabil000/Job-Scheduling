@@ -30,7 +30,8 @@ describe('JobsController (e2e)', () => {
 
   it('/jobs (POST) - Create SMS Job and Verify Execution', async () => {
     const smsJobData = {
-      name: 'sms-sender',
+      name: 'personal sms',
+      type: 'sms-sender',
       interval: 0,
       data: {
         to: '+1234567890',
@@ -53,7 +54,8 @@ describe('JobsController (e2e)', () => {
 
     expect(initialJob).toBeDefined();
     expect(initialJob?.status).toBe('PENDING');
-    expect(initialJob?.name).toBe('sms-sender');
+    expect(initialJob.name).toBe('personal sms');
+    expect(initialJob?.type).toBe('sms-sender');
     expect(initialJob?.data).toEqual(smsJobData.data);
 
     const initialLastRunAt = initialJob!.lastRunAt.getTime();
@@ -83,7 +85,8 @@ describe('JobsController (e2e)', () => {
     await request(app.getHttpServer())
       .post('/jobs')
       .send({
-        name: 'sms-sender',
+        name: 'personal sms',
+        type: 'sms-sender',
         interval: 10,
         data: { to: '+123', message: 'test' },
       })
@@ -97,13 +100,15 @@ describe('JobsController (e2e)', () => {
     expect(response.body.length).toBeGreaterThanOrEqual(1);
     expect(response.body[0]).toHaveProperty('id');
     expect(response.body[0]).toHaveProperty('name');
+    expect(response.body[0]).toHaveProperty('type');
   });
 
   it('/jobs/:id (GET) - Fetch Job by ID', async () => {
     const createResponse = await request(app.getHttpServer())
       .post('/jobs')
       .send({
-        name: 'sms-sender',
+        name: 'personal sms',
+        type: 'sms-sender',
         interval: 10,
         data: { to: '+123', message: 'test' },
       })
@@ -116,6 +121,6 @@ describe('JobsController (e2e)', () => {
       .expect(200);
 
     expect(response.body).toHaveProperty('id', jobId);
-    expect(response.body).toHaveProperty('name', 'sms-sender');
+    expect(response.body).toHaveProperty('type', 'sms-sender');
   });
 });

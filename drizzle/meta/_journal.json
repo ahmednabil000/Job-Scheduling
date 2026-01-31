@@ -50,6 +50,13 @@
       "when": 1769883818167,
       "tag": "0006_natural_lizard",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1769893708723,
+      "tag": "0007_greedy_hercules",
+      "breakpoints": true
     }
   ]
 }

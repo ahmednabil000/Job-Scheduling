@@ -24,10 +24,10 @@ export class JobsService {
   async create(createJobDto: CreateJobDto) {
     const data = createJobValidator.parse(createJobDto);
 
-    const validator = this.jobValidatorFactory.getValidator(data.name);
+    const validator = this.jobValidatorFactory.getValidator(data.type);
 
     if (!validator) {
-      throw new BadRequestException(`Unknown job name: ${data.name}`);
+      throw new BadRequestException(`Unknown job type: ${data.type}`);
     }
 
     const result = validator.safeParse(data.data);
@@ -41,6 +41,7 @@ export class JobsService {
       .insert(jobs)
       .values({
         name: data.name,
+        type: data.type,
         interval: data.interval,
         data: data.data,
         lastRunAt: new Date(),

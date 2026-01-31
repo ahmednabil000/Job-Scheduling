@@ -12,6 +12,7 @@ export const jobs = d.pgTable(
   {
     id: d.uuid().primaryKey().defaultRandom(),
     name: d.text('name').notNull(),
+    type: d.text('type').notNull(),
     status: d
       .text('status')
       .$type<'PENDING' | 'RUNNING' | 'FAILED'>()

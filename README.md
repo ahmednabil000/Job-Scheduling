@@ -104,12 +104,20 @@ To add a new job type (e.g., `push-notification`), follow these steps:
     }
     ```
 
-3.  **Register in Factory**:
-    Update `src/jobs/factories/job-processor.factory.ts` to instantiate your new processor when the job name matches.
+3.  **Register in Factories**:
+    Update `src/jobs/factories/job-processor.factory.ts` to instantiate your new processor when the job type matches.
+
     ```typescript
     // ... imports
     case 'push-notification':
       const data = pushNotificationValidator.parse(job.data);
       if (data) return new PushNotificationProcessor(data);
       return new InvalidJobProcessor({ jobId: job.id });
+    ```
+
+    Also update `src/jobs/factories/job-validator.factory.ts` to return your validator for the new type:
+
+    ```typescript
+    case 'push-notification':
+      return pushNotificationValidator;
     ```

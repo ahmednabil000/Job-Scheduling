@@ -12,7 +12,8 @@ Documentation for the Job Scheduling service endpoints.
 - **Body**:
   ```json
   {
-    "name": "string (required, e.g., 'email-sender')",
+    "name": "string (required, descriptive job name)",
+    "type": "string (required, e.g., 'email-sender', 'sms-sender')",
     "interval": "number (required, seconds)",
     "data": "object (required, payload specific to job type)"
   }
@@ -47,12 +48,12 @@ Documentation for the Job Scheduling service endpoints.
   }
   ```
 
-- **400 Bad Request**: Unknown job name.
+- **400 Bad Request**: Unknown job type.
 
   ```json
   {
     "statusCode": 400,
-    "message": "Unknown job name: {name}",
+    "message": "Unknown job type: {type}",
     "error": "Bad Request"
   }
   ```
@@ -84,6 +85,7 @@ Documentation for the Job Scheduling service endpoints.
     {
       "id": "uuid",
       "name": "string",
+      "type": "string",
       "status": "PENDING | RUNNING | FAILED",
       "data": { ... },
       "interval": number,
@@ -113,6 +115,7 @@ Documentation for the Job Scheduling service endpoints.
   {
     "id": "uuid",
     "name": "string",
+    "type": "string",
     "status": "PENDING | RUNNING | FAILED",
     "data": { ... },
     "interval": number,

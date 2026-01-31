@@ -11,7 +11,7 @@ import { smsSenderJobValidator } from '../validators/sms-sender.validator';
 export class JobProcessorFactory {
   constructor() {}
   public createProcess(job: Job): JobProcessor {
-    switch (job.name.toLowerCase()) {
+    switch (job.type.toLowerCase()) {
       case 'email-sender': {
         const data = emailSenderJobValidator.parse(job.data);
         if (data) {
