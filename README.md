@@ -6,6 +6,11 @@
 
 A robust job scheduling application built with NestJS and PostgreSQL.
 
+<p align="center">
+  <a href="API.md">API Documentation</a> &bull;
+  <a href="SCALABILITY.md">Scalability Design</a>
+</p>
+
 ## Installation
 
 First, install the project dependencies:
@@ -70,11 +75,11 @@ npm run test:cov
 
 ## API Documentation
 
-For detailed information about the API endpoints, request shapes, and response examples, please refer to the [API Documentation](./API.md).
+For detailed information about the API endpoints, request shapes, and response examples, please refer to the [API Documentation](API.md).
 
 ## Scalability Design
 
-To understand how this microservice handles high throughput (~6,000 req/min) and concurrency (~1,000 services), please read the [Scalability Design Document](./SCALABILITY.md).
+To understand how this microservice handles high throughput (~6,000 req/min) and concurrency (~1,000 services), please read the [Scalability Design Document](SCALABILITY.md).
 
 ## Adding New Job Types
 
