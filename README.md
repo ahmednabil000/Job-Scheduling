@@ -50,14 +50,8 @@ npm run migrate
 You can now start the application:
 
 ```bash
-# development
+# start the application
 npm run start
-
-# watch mode
-npm run start:dev
-
-# production mode
-npm run start:prod
 ```
 
 ## Test
