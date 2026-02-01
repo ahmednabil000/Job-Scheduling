@@ -18,7 +18,7 @@ FOR UPDATE SKIP LOCKED;
 ## 2. Optimized Indexing for O(log n) Polling
 
 ```typescript
-pollingIndex: d.index('jobs_status_next_run_idx').on(t.status, t.nextRunAt);
+pollingIndex: d.index('polling_idx').on(t.nextRunAt, t.status);
 ```
 
 Without this, polling would scan all jobs (O(n)), failing at 6k RPM.

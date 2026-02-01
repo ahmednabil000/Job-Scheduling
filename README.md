@@ -30,7 +30,7 @@ Create a `.env` file in the root directory (if it doesn't exist) and add the fol
 
 ```env
 # Database Connection String
-DATABASE_URL=postgres://username:password@localhost:5432/jobs-schedualing
+DATABASE_URL=postgres://username:password@localhost:5432/jobs-scheduling
 
 # Scheduler Configuration
 POLL_INTERVAL=5000      # Time in ms that the scheduler runs inside

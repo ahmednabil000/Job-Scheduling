@@ -125,7 +125,11 @@ Documentation for the Job Scheduling service endpoints.
   }
   ```
 
-- **200 OK**: Job not found.
+- **404 Not Found**: Job does not exist.
   ```json
-  null
+  {
+    "statusCode": 404,
+    "message": "Job with ID {id} not found",
+    "error": "Not Found"
+  }
   ```
