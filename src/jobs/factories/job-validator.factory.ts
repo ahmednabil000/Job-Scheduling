@@ -1,18 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ZodSchema } from 'zod';
-import { emailSenderJobValidator } from '../validators/email-sender.validator';
-import { smsSenderJobValidator } from '../validators/sms-sender.validator';
 
 @Injectable()
 export class JobValidatorFactory {
+  private validatorsMap = new Map<string, ZodSchema>();
+
+  public registerValidator(type: string, validator: ZodSchema): void {
+    this.validatorsMap.set(type.toLowerCase(), validator);
+  }
+
   public getValidator(type: string): ZodSchema | null {
-    switch (type.toLowerCase()) {
-      case 'email-sender':
-        return emailSenderJobValidator;
-      case 'sms-sender':
-        return smsSenderJobValidator;
-      default:
-        return null; 
-    }
+    return this.validatorsMap.get(type.toLowerCase()) ?? null;
   }
 }

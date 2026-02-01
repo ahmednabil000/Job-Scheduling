@@ -1,33 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { Job } from 'src/database/job.schema';
 import { JobProcessor } from '../interfaces/job-processor.interface';
-import { EmailSenderJobProcessor } from '../processors/email-sender.processor';
-import { SmsSenderJobProcessor } from '../processors/sms-sender.processor';
 import { InvalidJobProcessor } from '../processors/invalid-job.processor';
-import { emailSenderJobValidator } from '../validators/email-sender.validator';
-import { smsSenderJobValidator } from '../validators/sms-sender.validator';
+import { JobValidatorFactory } from './job-validator.factory';
+
+export type JobProcessorCreator = (data: unknown) => JobProcessor;
 
 @Injectable()
 export class JobProcessorFactory {
-  constructor() {}
+  private processorsMap = new Map<string, JobProcessorCreator>();
+
+  constructor(private readonly validatorFactory: JobValidatorFactory) {}
+
+  public registerProcessor(type: string, creator: JobProcessorCreator): void {
+    this.processorsMap.set(type.toLowerCase(), creator);
+  }
+
   public createProcess(job: Job): JobProcessor {
-    switch (job.type.toLowerCase()) {
-      case 'email-sender': {
-        const data = emailSenderJobValidator.parse(job.data);
-        if (data) {
-          return new EmailSenderJobProcessor(data);
-        }
-        return new InvalidJobProcessor({ jobId: job.id });
-      }
-      case 'sms-sender': {
-        const data = smsSenderJobValidator.parse(job.data);
-        if (data) {
-          return new SmsSenderJobProcessor(data);
-        }
-        return new InvalidJobProcessor({ jobId: job.id });
-      }
-      default:
-        return new InvalidJobProcessor({ jobId: job.id });
+    const type = job.type.toLowerCase();
+
+    if (!this.processorsMap.has(type)) {
+      return new InvalidJobProcessor({ jobId: job.id });
     }
+
+    const validator = this.validatorFactory.getValidator(type);
+    if (!validator) {
+      return new InvalidJobProcessor({ jobId: job.id });
+    }
+
+    const validatedData = validator.parse(job.data);
+    const processorCreator = this.processorsMap.get(type)!;
+    return processorCreator(validatedData);
   }
 }

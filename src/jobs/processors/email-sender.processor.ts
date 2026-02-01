@@ -5,9 +5,11 @@ import { EmailSernderData } from '../validators/email-sender.validator';
 export class EmailSenderJobProcessor implements JobProcessor {
   private readonly logger = new Logger(EmailSenderJobProcessor.name);
   private _data: EmailSernderData;
+
   constructor(data: EmailSernderData) {
     this._data = data;
   }
+
   public async process(): Promise<void> {
     this.logger.log(
       `Sending email to ${this._data.to} from ${this._data.from}`,

@@ -73,51 +73,62 @@ To understand how this microservice handles high throughput (~6,000 req/min) and
 
 To add a new job type (e.g., `push-notification`), follow these steps:
 
-1.  **Create a Validator**:
-    Create a new validator file in `src/jobs/validators/` (e.g., `push-notification.validator.ts`) to define the expected data shape.
+### 1. Create a Validator
 
-    ```typescript
-    import { z } from 'zod';
-    export const pushNotificationValidator = z.object({
-      userId: z.string(),
-      title: z.string(),
-    });
+Create a new validator file in `src/jobs/validators/` (e.g., `push-notification.validator.ts`) to define the expected data shape:
 
-    export type PushNotificationData = z.infer<
-      typeof pushNotificationValidator
-    >;
-    ```
+```typescript
+import { z } from 'zod';
 
-2.  **Implement Job Processor**:
-    Create a new processor class in `src/jobs/processors/` that implements the `JobProcessor` interface.
+export const pushNotificationValidator = z.object({
+  userId: z.string(),
+  title: z.string(),
+  message: z.string(),
+});
 
-    ```typescript
-    import { JobProcessor } from '../interfaces/job-processor.interface';
-    import { PushNotificationData } from '../validators/push-notification.validator';
+export type PushNotificationData = z.infer<typeof pushNotificationValidator>;
+```
 
-    export class PushNotificationProcessor implements JobProcessor {
-      constructor(private readonly data: PushNotificationData) {}
-      async process(): Promise<void> {
-        // Implement your logic here
-        console.log('Sending push notification...', this.data);
-      }
-    }
-    ```
+### 2. Create the Job Processor
 
-3.  **Register in Factories**:
-    Update `src/jobs/factories/job-processor.factory.ts` to instantiate your new processor when the job type matches.
+Create a new processor class in `src/jobs/processors/` that implements the `JobProcessor` interface. The processor receives **already-validated** data:
 
-    ```typescript
-    // ... imports
-    case 'push-notification':
-      const data = pushNotificationValidator.parse(job.data);
-      if (data) return new PushNotificationProcessor(data);
-      return new InvalidJobProcessor({ jobId: job.id });
-    ```
+```typescript
+import { JobProcessor } from '../interfaces/job-processor.interface';
+import { Logger } from '@nestjs/common';
+import { PushNotificationData } from '../validators/push-notification.validator';
 
-    Also update `src/jobs/factories/job-validator.factory.ts` to return your validator for the new type:
+export class PushNotificationProcessor implements JobProcessor {
+  private readonly logger = new Logger(PushNotificationProcessor.name);
 
-    ```typescript
-    case 'push-notification':
-      return pushNotificationValidator;
-    ```
+  constructor(private readonly data: PushNotificationData) {}
+
+  async process(): Promise<void> {
+    this.logger.log(`Sending push notification to ${this.data.userId}`);
+    // Implement your logic here
+    this.logger.log(`Push notification sent to ${this.data.userId}`);
+  }
+}
+```
+
+### 3. Register in main.ts
+
+Register your new job type using the `JobTypeRegistry` in `src/main.ts`:
+
+```typescript
+import { PushNotificationProcessor } from './jobs/processors/push-notification.processor';
+import {
+  pushNotificationValidator,
+  PushNotificationData,
+} from './jobs/validators/push-notification.validator';
+
+// Inside bootstrap()
+jobTypeRegistry.register({
+  type: 'push-notification',
+  validator: pushNotificationValidator,
+  processorCreator: (data) =>
+    new PushNotificationProcessor(data as PushNotificationData),
+});
+```
+
+That's it! The `JobTypeRegistry` handles registering both the validator and processor together, ensuring they stay in sync.
