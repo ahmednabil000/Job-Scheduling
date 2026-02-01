@@ -1,6 +1,6 @@
 # System Scalability
 
-To handle the load constraints (~10k users, ~1k job types, 6k RPM), I designed the scheduler with two key optimizations:
+To handle the load constraints (~10k users, ~1k job types, 6k RPM), I designed the scheduler with three key optimizations:
 
 ## 1. Concurrent Job Polling with `SKIP LOCKED`
 
