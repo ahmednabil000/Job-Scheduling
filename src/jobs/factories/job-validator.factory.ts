@@ -12,7 +12,7 @@ export class JobValidatorFactory {
       case 'sms-sender':
         return smsSenderJobValidator;
       default:
-        return null; // Or throw error, but service handles "unknown" usually
+        return null; 
     }
   }
 }
