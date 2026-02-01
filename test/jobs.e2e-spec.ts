@@ -5,6 +5,22 @@ import { AppModule } from './../src/app.module';
 import { db } from './../src/database/index';
 import { jobs } from './../src/database/job.schema';
 import { eq } from 'drizzle-orm';
+import { JobTypeRegistry } from './../src/jobs/job-type.registry';
+import { EmailSenderJobProcessor } from './../src/jobs/processors/email-sender.processor';
+import { SmsSenderJobProcessor } from './../src/jobs/processors/sms-sender.processor';
+import { NotificationSenderJobProcessor } from './../src/jobs/processors/notification-sender.processor';
+import {
+  EmailSernderData,
+  emailSenderJobValidator,
+} from './../src/jobs/validators/email-sender.validator';
+import {
+  SmsSenderData,
+  smsSenderJobValidator,
+} from './../src/jobs/validators/sms-sender.validator';
+import {
+  NotificationSernderData,
+  notificationSenderJobValidator,
+} from './../src/jobs/validators/notification-sender.validator';
 
 describe('JobsController (e2e)', () => {
   let app: INestApplication;
@@ -17,6 +33,27 @@ describe('JobsController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    // Register job types
+    const jobTypeRegistry = app.get(JobTypeRegistry);
+    jobTypeRegistry.register({
+      type: 'email-sender',
+      validator: emailSenderJobValidator,
+      processorCreator: (data) =>
+        new EmailSenderJobProcessor(data as EmailSernderData),
+    });
+    jobTypeRegistry.register({
+      type: 'sms-sender',
+      validator: smsSenderJobValidator,
+      processorCreator: (data) =>
+        new SmsSenderJobProcessor(data as SmsSenderData),
+    });
+    jobTypeRegistry.register({
+      type: 'notification-sender',
+      validator: notificationSenderJobValidator,
+      processorCreator: (data) =>
+        new NotificationSenderJobProcessor(data as NotificationSernderData),
+    });
   }, 30000);
 
   afterAll(async () => {
