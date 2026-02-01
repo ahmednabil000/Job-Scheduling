@@ -15,14 +15,14 @@ LIMIT 10
 FOR UPDATE SKIP LOCKED;
 ```
 
-## 2. Optimized Indexing for O(1) Polling
+## 2. Optimized Indexing for O(log n) Polling
 
 ```typescript
 pollingIndex: d.index('jobs_status_next_run_idx').on(t.status, t.nextRunAt);
 ```
 
 Without this, polling would scan all jobs (O(n)), failing at 6k RPM.
-With the index, PostgreSQL jumps directly to relevant rows (effectively O(1)).
+With the index, PostgreSQL jumps to relevant rows (effectively O(log n)).
 
 ## 3. Modular Architecture
 
