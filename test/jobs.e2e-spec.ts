@@ -4,7 +4,7 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { db } from './../src/database/index';
 import { jobs } from './../src/database/job.schema';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { JobTypeRegistry } from './../src/jobs/job-type.registry';
 import { EmailSenderJobProcessor } from './../src/jobs/processors/email-sender.processor';
 import { SmsSenderJobProcessor } from './../src/jobs/processors/sms-sender.processor';
@@ -24,13 +24,13 @@ import {
 
 describe('JobsController (e2e)', () => {
   let app: INestApplication;
-
+  let createdJobsId;
   beforeAll(async () => {
     process.env.POLL_INTERVAL = '1000';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-
+    createdJobsId = [];
     app = moduleFixture.createNestApplication();
     await app.init();
 
@@ -57,13 +57,12 @@ describe('JobsController (e2e)', () => {
   }, 30000);
 
   afterAll(async () => {
-    await db.delete(jobs);
+    console.log(createdJobsId);
+    await db.delete(jobs).where(inArray(jobs.id, createdJobsId));
     await app.close();
   });
 
-  beforeEach(async () => {
-    await db.delete(jobs);
-  });
+  beforeEach(async () => {});
 
   it('/jobs (POST) - Create SMS Job and Verify Execution', async () => {
     const smsJobData = {
@@ -83,6 +82,8 @@ describe('JobsController (e2e)', () => {
 
     expect(createResponse.body).toHaveProperty('jobId');
     const jobId = createResponse.body.jobId;
+
+    createdJobsId.push(jobId);
 
     const [initialJob] = await db
       .select()
@@ -119,7 +120,7 @@ describe('JobsController (e2e)', () => {
   }, 60000);
 
   it('/jobs (GET) - Fetch All Jobs', async () => {
-    await request(app.getHttpServer())
+    const createResponse = await request(app.getHttpServer())
       .post('/jobs')
       .send({
         name: 'personal sms',
@@ -128,7 +129,7 @@ describe('JobsController (e2e)', () => {
         data: { to: '+123', message: 'test' },
       })
       .expect(201);
-
+    createdJobsId.push(createResponse.body.jobId);
     const response = await request(app.getHttpServer())
       .get('/jobs')
       .expect(200);
@@ -152,7 +153,7 @@ describe('JobsController (e2e)', () => {
       .expect(201);
 
     const jobId = createResponse.body.jobId;
-
+    createdJobsId.push(jobId);
     const response = await request(app.getHttpServer())
       .get(`/jobs/${jobId}`)
       .expect(200);
